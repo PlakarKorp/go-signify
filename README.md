@@ -87,6 +87,7 @@ signify -C [-q] -p pubkey -x sigfile [file ...]
 signify -G [-n] [-c comment] -p pubkey -s seckey
 signify -S [-e] [-x sigfile] -s seckey -m message
 signify -V [-eq] [-x sigfile] -p pubkey -m message
+signify -version
 ```
 
 ```sh
@@ -94,7 +95,19 @@ go build ./cmd/signify
 ```
 
 Flags and semantics follow `signify(1)`, so it substitutes for the OpenBSD tool
-on systems that lack it.
+on systems that lack it. `-version` is the one addition.
+
+## Version
+
+```go
+signify.VERSION    // "v0.1.0", the release this was cut from
+signify.Version()  // adds "+<revision>" when built from an untagged checkout
+```
+
+```
+$ signify -version
+signify v0.1.0
+```
 
 ## Notes
 

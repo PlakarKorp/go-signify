@@ -532,3 +532,20 @@ func TestSignMalformedSecretKey(t *testing.T) {
 		t.Error("expected an error for a malformed secret key")
 	}
 }
+
+func TestVersionFlag(t *testing.T) {
+	stdout, _, err := exec(t, "", "-version")
+	if err != nil {
+		t.Fatalf("-version: %v", err)
+	}
+
+	if !strings.HasPrefix(stdout, "signify v") {
+		t.Errorf("stdout = %q, want a leading \"signify v\"", stdout)
+	}
+
+	// -version stands alone: it must not require a mode, and must not be
+	// refused for combining with one.
+	if _, _, err := exec(t, "", "-version", "-G"); err != nil {
+		t.Errorf("-version alongside a mode: %v", err)
+	}
+}

@@ -31,11 +31,13 @@ import (
 	"golang.org/x/term"
 )
 
+// -version is an addition; signify(1) itself has no such flag.
 const usage = `usage:
 	signify -C [-q] -p pubkey -x sigfile [file ...]
 	signify -G [-n] [-c comment] -p pubkey -s seckey
 	signify -S [-e] [-x sigfile] -s seckey -m message
 	signify -V [-eq] [-x sigfile] -p pubkey -m message
+	signify -version
 `
 
 type options struct {
@@ -47,6 +49,7 @@ type options struct {
 	embedded bool
 	noPass   bool
 	quiet    bool
+	version  bool
 
 	comment string
 	pubkey  string
@@ -70,6 +73,7 @@ func run(args []string, stdin io.Reader, stdout, stderr io.Writer) error {
 	fs.BoolVar(&opts.embedded, "e", false, "embed the message in the signature")
 	fs.BoolVar(&opts.noPass, "n", false, "do not ask for a passphrase")
 	fs.BoolVar(&opts.quiet, "q", false, "suppress informational output")
+	fs.BoolVar(&opts.version, "version", false, "print the version and exit")
 
 	fs.StringVar(&opts.comment, "c", "signify", "comment to add during key generation")
 	fs.StringVar(&opts.pubkey, "p", "", "public key file")
@@ -79,6 +83,14 @@ func run(args []string, stdin io.Reader, stdout, stderr io.Writer) error {
 
 	if err := fs.Parse(args); err != nil {
 		return err
+	}
+
+	// Checked before the mode selection: -version stands alone rather
+	// than being a fifth mode.
+	if opts.version {
+		fmt.Fprintf(stdout, "signify %s\n", signify.Version())
+
+		return nil
 	}
 
 	n := 0
