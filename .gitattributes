@@ -1,0 +1,3 @@
+# signify files are byte-exact: a signature covers the message verbatim, so
+# line-ending translation would corrupt every fixture on checkout.
+testdata/** -text

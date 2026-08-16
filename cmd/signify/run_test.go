@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -85,8 +86,13 @@ func TestGenerateSignVerify(t *testing.T) {
 	}
 }
 
-// The secret key must not be world-readable.
+// The secret key must not be world-readable. Windows does not implement Unix
+// permission bits, so os.WriteFile's mode is not observable there.
 func TestGenerateSecretKeyPermissions(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("no Unix permission bits on Windows")
+	}
+
 	dir := t.TempDir()
 
 	_, sec := generate(t, dir, "k", "")
