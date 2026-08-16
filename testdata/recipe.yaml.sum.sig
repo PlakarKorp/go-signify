@@ -1,0 +1,3 @@
+untrusted comment: verify with plakar-20260815.pub
+RWT9B2Rj2tbKp4cdThnNUPMwKrdcVCApAi4i7L7AA4VdZppsYvnD8VNTXnqcVxdu3mXm1x7vzLe/yyhlePi1FwXUKlWbQjwLuwk=
+SHA256 (recipe.yaml) = 745862d152874c2065c0df5ee879ce15e1b74724e9b5a21dd99438b071204fed

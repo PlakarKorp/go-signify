@@ -1,0 +1,15 @@
+Fixtures produced by the real toolchain, not by this package.
+
+testkey.pub / testkey.sec
+    Keypair generated with `gosignify -G`. Passphrase: hunter2.
+    Used to exercise sign/verify round trips.
+
+other.pub
+    An unrelated public key, for key-mismatch cases.
+
+plakar-dist.pub
+    The live PlakarKorp package-signing public key.
+
+recipe.yaml, recipe.yaml.sum, recipe.yaml.sum.sig
+    Fetched from plakar.io/dist. Signed by plakar-dist.pub, embedded.
+    These fail if this package stops agreeing with signify(1) itself.
