@@ -355,3 +355,180 @@ func TestVerifyMissingFiles(t *testing.T) {
 		t.Error("expected an error for a missing public key")
 	}
 }
+
+func TestFlagParseError(t *testing.T) {
+	if _, _, err := exec(t, "", "-nosuchflag"); err == nil {
+		t.Error("expected an error for an unknown flag")
+	}
+}
+
+func TestEmptyPassphraseRejected(t *testing.T) {
+	dir := t.TempDir()
+
+	pub := filepath.Join(dir, "k.pub")
+	sec := filepath.Join(dir, "k.sec")
+
+	if _, _, err := exec(t, "\n", "-G", "-p", pub, "-s", sec); err == nil {
+		t.Error("expected an empty passphrase to be rejected")
+	}
+}
+
+func TestPassphraseMismatchRejected(t *testing.T) {
+	dir := t.TempDir()
+
+	pub := filepath.Join(dir, "k.pub")
+	sec := filepath.Join(dir, "k.sec")
+
+	if _, _, err := exec(t, "one\ntwo\n", "-G", "-p", pub, "-s", sec); err == nil {
+		t.Error("expected mismatched passphrases to be rejected")
+	}
+}
+
+// EOF on stdin must be an error, not an empty passphrase silently accepted.
+func TestPassphraseEOF(t *testing.T) {
+	dir := t.TempDir()
+
+	if _, _, err := exec(t, "", "-G",
+		"-p", filepath.Join(dir, "k.pub"),
+		"-s", filepath.Join(dir, "k.sec")); err == nil {
+		t.Error("expected EOF on stdin to be an error")
+	}
+}
+
+func TestSignMissingFiles(t *testing.T) {
+	dir := t.TempDir()
+
+	_, sec := generate(t, dir, "k", "")
+
+	// Missing secret key.
+	if _, _, err := exec(t, "", "-S", "-s", filepath.Join(dir, "absent.sec"),
+		"-m", filepath.Join(dir, "m.txt")); err == nil {
+		t.Error("expected an error for a missing secret key")
+	}
+
+	// Missing message.
+	if _, _, err := exec(t, "", "-S", "-s", sec,
+		"-m", filepath.Join(dir, "absent.txt")); err == nil {
+		t.Error("expected an error for a missing message")
+	}
+}
+
+func TestSignUnwritableSigfile(t *testing.T) {
+	dir := t.TempDir()
+
+	_, sec := generate(t, dir, "k", "")
+	msg := write(t, dir, "m.txt", "x\n")
+
+	// A signature path inside a nonexistent directory cannot be written.
+	sig := filepath.Join(dir, "no-such-dir", "out.sig")
+
+	if _, _, err := exec(t, "", "-S", "-s", sec, "-m", msg, "-x", sig); err == nil {
+		t.Error("expected an error writing to a nonexistent directory")
+	}
+}
+
+func TestGenerateUnwritableOutput(t *testing.T) {
+	dir := t.TempDir()
+
+	if _, _, err := exec(t, "", "-G", "-n",
+		"-p", filepath.Join(dir, "k.pub"),
+		"-s", filepath.Join(dir, "no-such-dir", "k.sec")); err == nil {
+		t.Error("expected an error writing the secret key")
+	}
+
+	if _, _, err := exec(t, "", "-G", "-n",
+		"-p", filepath.Join(dir, "no-such-dir", "k.pub"),
+		"-s", filepath.Join(dir, "k2.sec")); err == nil {
+		t.Error("expected an error writing the public key")
+	}
+}
+
+func TestVerifyMalformedFiles(t *testing.T) {
+	dir := t.TempDir()
+
+	pub, sec := generate(t, dir, "k", "")
+	msg := write(t, dir, "m.txt", "x\n")
+
+	if _, _, err := exec(t, "", "-S", "-s", sec, "-m", msg); err != nil {
+		t.Fatal(err)
+	}
+
+	// A corrupt public key.
+	bad := write(t, dir, "bad.pub", "not a signify file\n")
+	if _, _, err := exec(t, "", "-V", "-p", bad, "-m", msg); err == nil {
+		t.Error("expected an error for a malformed public key")
+	}
+
+	// A corrupt signature.
+	badsig := write(t, dir, "bad.sig", "not a signify file\n")
+	if _, _, err := exec(t, "", "-V", "-p", pub, "-m", msg, "-x", badsig); err == nil {
+		t.Error("expected an error for a malformed signature")
+	}
+
+	// A missing signature.
+	if _, _, err := exec(t, "", "-V", "-p", pub, "-m", msg,
+		"-x", filepath.Join(dir, "absent.sig")); err == nil {
+		t.Error("expected an error for a missing signature")
+	}
+}
+
+func TestVerifyEmbeddedUnwritableOutput(t *testing.T) {
+	dir := t.TempDir()
+
+	pub, sec := generate(t, dir, "k", "")
+	msg := write(t, dir, "m.txt", "x\n")
+
+	if _, _, err := exec(t, "", "-S", "-e", "-s", sec, "-m", msg); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, _, err := exec(t, "", "-V", "-e", "-p", pub, "-x", msg+".sig",
+		"-m", filepath.Join(dir, "no-such-dir", "out.txt")); err == nil {
+		t.Error("expected an error writing the extracted message")
+	}
+}
+
+func TestCheckMalformedFiles(t *testing.T) {
+	dir := t.TempDir()
+
+	pub, sec := generate(t, dir, "k", "")
+
+	write(t, dir, "a.txt", "aaa")
+	sums := "SHA256 (a.txt) = 9834876dcfb05cb167a5c24953eba58c4ac89b1adf57f28f2f9d09af107ee8f0\n"
+	sumfile := write(t, dir, "SHA256", sums)
+
+	if _, _, err := exec(t, "", "-S", "-e", "-s", sec, "-m", sumfile); err != nil {
+		t.Fatal(err)
+	}
+
+	// Missing signature file.
+	if _, _, err := exec(t, "", "-C", "-p", pub,
+		"-x", filepath.Join(dir, "absent.sig")); err == nil {
+		t.Error("expected an error for a missing signature")
+	}
+
+	// Malformed signature file.
+	bad := write(t, dir, "bad.sig", "garbage\n")
+	if _, _, err := exec(t, "", "-C", "-p", pub, "-x", bad); err == nil {
+		t.Error("expected an error for a malformed signature")
+	}
+
+	// Malformed public key.
+	badpub := write(t, dir, "bad.pub", "garbage\n")
+	if _, _, err := exec(t, "", "-C", "-p", badpub, "-x", sumfile+".sig"); err == nil {
+		t.Error("expected an error for a malformed public key")
+	}
+}
+
+// A secret key that is neither valid nor merely passphrase-protected must be
+// reported as malformed rather than treated as encrypted.
+func TestSignMalformedSecretKey(t *testing.T) {
+	dir := t.TempDir()
+
+	bad := write(t, dir, "bad.sec", "garbage\n")
+	msg := write(t, dir, "m.txt", "x\n")
+
+	if _, _, err := exec(t, "", "-S", "-s", bad, "-m", msg); err == nil {
+		t.Error("expected an error for a malformed secret key")
+	}
+}

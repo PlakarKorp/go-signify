@@ -53,20 +53,27 @@ func (sk *SecretKey) Encrypted() bool {
 // GenerateKey creates a keypair. comment is stored in the public key file;
 // the secret key's own comment is derived from it the way signify does.
 func GenerateKey(comment string) (*PublicKey, *SecretKey, error) {
-	pub, priv, err := ed25519.GenerateKey(rand.Reader)
+	return GenerateKeyFrom(rand.Reader, comment)
+}
+
+// GenerateKeyFrom creates a keypair drawing from random. Callers should use
+// [GenerateKey]; this exists so the failure paths of an exhausted or failing
+// entropy source are reachable in tests.
+func GenerateKeyFrom(random io.Reader, comment string) (*PublicKey, *SecretKey, error) {
+	pub, priv, err := ed25519.GenerateKey(random)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	var keynum KeyNum
-	if _, err := io.ReadFull(rand.Reader, keynum[:]); err != nil {
+	if _, err := io.ReadFull(random, keynum[:]); err != nil {
 		return nil, nil, err
 	}
 
 	pk := &PublicKey{KeyNum: keynum, Key: pub, Comment: comment}
 	sk := &SecretKey{KeyNum: keynum, Key: priv, Comment: comment}
 
-	if _, err := io.ReadFull(rand.Reader, sk.salt[:]); err != nil {
+	if _, err := io.ReadFull(random, sk.salt[:]); err != nil {
 		return nil, nil, err
 	}
 
