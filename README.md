@@ -1,5 +1,9 @@
 # go-signify
 
+[![Go](https://github.com/PlakarKorp/go-signify/actions/workflows/go.yml/badge.svg)](https://github.com/PlakarKorp/go-signify/actions/workflows/go.yml)
+[![codecov](https://codecov.io/gh/PlakarKorp/go-signify/branch/main/graph/badge.svg)](https://codecov.io/gh/PlakarKorp/go-signify)
+[![Go Reference](https://pkg.go.dev/badge/github.com/PlakarKorp/go-signify.svg)](https://pkg.go.dev/github.com/PlakarKorp/go-signify)
+
 OpenBSD [signify(1)](https://man.openbsd.org/signify) as a Go library and
 command-line tool.
 

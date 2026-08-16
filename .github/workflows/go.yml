@@ -8,14 +8,56 @@ on:
 jobs:
   test:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-go@v5
         with:
           go-version: '1.25'
-      - run: go vet ./...
-      - run: go test -race -coverprofile=coverage.out ./...
-      - run: go tool cover -func=coverage.out
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Install go-junit-report
+        run: go install github.com/jstemmer/go-junit-report/v2@latest
+
+      # One run produces both a coverage profile (Codecov coverage) and a
+      # JUnit XML (Codecov Test Analytics). continue-on-error keeps the upload
+      # steps reachable when tests fail, which is when the results matter
+      # most; the last step re-surfaces the failure.
+      - name: Test
+        id: gotest
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          go test -v -race -coverprofile=coverage.out -covermode=atomic -json ./... \
+            | go-junit-report -parser gojson -set-exit-code > junit.xml
+          status=$?
+          echo "test_exit=$status" >> "$GITHUB_OUTPUT"
+          exit $status
+
+      # Uploaded from one leg only: three matrix legs reporting the same lines
+      # would add nothing to the coverage report.
+      - name: Upload coverage to Codecov
+        if: matrix.os == 'ubuntu-latest'
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./coverage.out
+          fail_ci_if_error: false
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() && matrix.os == 'ubuntu-latest' }}
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./junit.xml
+          report_type: test_results
+          fail_ci_if_error: false
+
+      - name: Fail if tests failed
+        if: ${{ steps.gotest.outputs.test_exit != '0' }}
+        run: exit 1

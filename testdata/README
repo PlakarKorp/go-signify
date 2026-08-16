@@ -1,14 +1,19 @@
 Fixtures produced by the real toolchain, not by this package.
 
 testkey.pub / testkey.sec
-    Keypair generated with `gosignify -G`. Passphrase: hunter2.
-    Used to exercise sign/verify round trips.
+    A throwaway keypair, generated for these tests and used nowhere else.
+    Passphrase: hunter2, which is also in the test source.
+
+    This secret key is published deliberately: exercising sign, key
+    decryption and wrong-passphrase handling needs one. It signs nothing
+    real, and must never be used for anything.
 
 other.pub
     An unrelated public key, for key-mismatch cases.
 
 plakar-dist.pub
-    The live PlakarKorp package-signing public key.
+    The live PlakarKorp package-signing public key. Public keys are meant
+    to be published; this one verifies the fixtures below.
 
 recipe.yaml, recipe.yaml.sum, recipe.yaml.sum.sig
     Fetched from plakar.io/dist. Signed by plakar-dist.pub, embedded.

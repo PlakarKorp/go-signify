@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="67">
+	<testsuite name="github.com/PlakarKorp/go-signify/cmd/signify" tests="15" failures="0" errors="0" id="0" hostname="gilless-mac-mini.home" time="14.298" timestamp="2026-08-16T14:07:22+02:00">
+		<properties>
+			<property name="coverage.statements.pct" value="80.80"></property>
+		</properties>
+		<testcase name="TestGenerateSignVerify" classname="github.com/PlakarKorp/go-signify/cmd/signify" time="6.550"></testcase>
+		<testcase name="TestGenerateSecretKeyPermissions" classname="github.com/PlakarKorp/go-signify/cmd/signify" time="0.000"></testcase>
+		<testcase name="TestGenerateUnencrypted" classname="github.com/PlakarKorp/go-signify/cmd/signify" time="0.000"></testcase>
+		<testcase name="TestSignWrongPassphrase" classname="github.com/PlakarKorp/go-signify/cmd/signify" time="6.210"></testcase>
+		<testcase name="TestVerifyRejectsTamperedMessage" classname="github.com/PlakarKorp/go-signify/cmd/signify" time="0.000"></testcase>
+		<testcase name="TestVerifyRejectsWrongKey" classname="github.com/PlakarKorp/go-signify/cmd/signify" time="0.000"></testcase>
+		<testcase name="TestEmbeddedRoundTrip" classname="github.com/PlakarKorp/go-signify/cmd/signify" time="0.000"></testcase>
+		<testcase name="TestSigfileFlag" classname="github.com/PlakarKorp/go-signify/cmd/signify" time="0.000"></testcase>
+		<testcase name="TestQuietSuppressesOutput" classname="github.com/PlakarKorp/go-signify/cmd/signify" time="0.000"></testcase>
+		<testcase name="TestCheckChecksumList" classname="github.com/PlakarKorp/go-signify/cmd/signify" time="0.000"></testcase>
+		<testcase name="TestCheckDetectsTamperedFile" classname="github.com/PlakarKorp/go-signify/cmd/signify" time="0.000"></testcase>
+		<testcase name="TestCheckNamedSubset" classname="github.com/PlakarKorp/go-signify/cmd/signify" time="0.000"></testcase>
+		<testcase name="TestModeSelection" classname="github.com/PlakarKorp/go-signify/cmd/signify" time="0.000"></testcase>
+		<testcase name="TestMissingRequiredFlags" classname="github.com/PlakarKorp/go-signify/cmd/signify" time="0.000"></testcase>
+		<testcase name="TestVerifyMissingFiles" classname="github.com/PlakarKorp/go-signify/cmd/signify" time="0.000"></testcase>
+	</testsuite>
+	<testsuite name="github.com/PlakarKorp/go-signify" tests="52" failures="0" errors="0" id="1" hostname="gilless-mac-mini.home" time="46.683" timestamp="2026-08-16T14:07:54+02:00">
+		<properties>
+			<property name="coverage.statements.pct" value="97.00"></property>
+		</properties>
+		<testcase name="TestParseChecksumsTagged" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseChecksumsUntagged" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseChecksumsBinaryMarker" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseChecksumsMultiple" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseChecksumsRejectsMalformed" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestChecksumFileAndVerify" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestChecksumRoundTripThroughString" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestChecksumUnsupportedAlgorithm" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestChecksumSHA512" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestListFind" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestVerifyChecksumListAndCheckFiles" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestCheckFilesRejectsTamperedContent" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestCheckFilesRejectsWrongKey" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestCheckFilesNamedSubset" classname="github.com/PlakarKorp/go-signify" time="2.950"></testcase>
+		<testcase name="TestCheckFilesRejectsUnlistedName" classname="github.com/PlakarKorp/go-signify" time="2.930"></testcase>
+		<testcase name="TestVerifyChecksumListRejectsDetached" classname="github.com/PlakarKorp/go-signify" time="2.920"></testcase>
+		<testcase name="TestChecksumListString" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestChecksumFilePropagatesReadError" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestChecksumVerifyPropagatesReadError" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestCheckFilesPropagatesOpenError" classname="github.com/PlakarKorp/go-signify" time="2.900"></testcase>
+		<testcase name="TestParseSignatureRejectsSecretKey" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseSecretKeyRejectsWrongKDF" classname="github.com/PlakarKorp/go-signify" time="6.480"></testcase>
+		<testcase name="TestParseFileRejectsCRLF" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParsePublicKey" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestPublicKeyRoundTrip" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseSecretKey" classname="github.com/PlakarKorp/go-signify" time="2.880"></testcase>
+		<testcase name="TestParseSecretKeyWrongPassphrase" classname="github.com/PlakarKorp/go-signify" time="6.400"></testcase>
+		<testcase name="TestSecretKeyRoundTrip" classname="github.com/PlakarKorp/go-signify" time="6.470"></testcase>
+		<testcase name="TestGenerateKeyAndSign" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestGenerateKeyIsUnique" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestUnencryptedSecretKey" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestVerifyRealEmbeddedSignature" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestSignatureRoundTrip" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestSignEmbedded" classname="github.com/PlakarKorp/go-signify" time="2.860"></testcase>
+		<testcase name="TestVerifyRejectsTamperedMessage" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestVerifyRejectsWrongKey" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestVerifyEmbeddedRejectsDetached" classname="github.com/PlakarKorp/go-signify" time="2.860"></testcase>
+		<testcase name="TestDetachedSignatureHasNoMessage" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseRejectsMalformed" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseRejectsMalformed/empty" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseRejectsMalformed/no_header" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseRejectsMalformed/one_line" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseRejectsMalformed/bad_base64" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseRejectsMalformed/short_payload" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseRejectsMalformed/wrong_algorithm" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseRejectsMalformed/signature_as_key" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseRejectsMalformed/long_comment" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseSignatureRejectsPublicKey" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestParseSecretKeyRejectsPublicKey" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+		<testcase name="TestMarshalRejectsLongComment" classname="github.com/PlakarKorp/go-signify" time="2.860"></testcase>
+		<testcase name="TestKeyNumString" classname="github.com/PlakarKorp/go-signify" time="2.870"></testcase>
+		<testcase name="TestSignatureCommentUsesBareName" classname="github.com/PlakarKorp/go-signify" time="0.000"></testcase>
+	</testsuite>
+</testsuites>
