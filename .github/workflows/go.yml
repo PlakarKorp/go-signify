@@ -32,10 +32,9 @@ jobs:
       - name: Install go-junit-report
         run: go install github.com/jstemmer/go-junit-report/v2@latest
 
-      # One run produces both a coverage profile (Codecov coverage) and a
-      # JUnit XML (Codecov Test Analytics). continue-on-error keeps the upload
-      # steps reachable when tests fail, which is when the results matter
-      # most; the last step re-surfaces the failure.
+      # One run produces both a coverage profile and a JUnit XML.
+      # continue-on-error keeps the upload steps reachable when tests fail, which
+      # is when the results matter most; the last step re-surfaces the failure.
       - name: Test
         id: gotest
         continue-on-error: true
@@ -50,21 +49,6 @@ jobs:
 
       # Uploaded from one leg only: three matrix legs reporting the same lines
       # would add nothing to the coverage report.
-      - name: Upload coverage to Codecov
-        if: matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5.5.5
-        with:
-          files: ./coverage.out
-          fail_ci_if_error: false
-
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() && matrix.os == 'ubuntu-latest' }}
-        uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5.5.5
-        with:
-          files: ./junit.xml
-          report_type: test_results
-          fail_ci_if_error: false
-
       # kortex gets the same reports, sent by the uploader it serves (a public
       # repository cannot use its action) with the job's OIDC token: no secret.
       # A pull request from a fork gets no token and uploads nothing. Failing
